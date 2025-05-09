@@ -1,7 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { CircleCheck as CheckCircle2, Clock, Circle as XCircle, Filter, CalendarDays, BookOpen } from 'lucide-react-native';
+import {
+  CircleCheck as CheckCircle2,
+  Clock,
+  Circle as XCircle,
+  Filter,
+  CalendarDays,
+  BookOpen,
+} from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 
 export const AttendanceScreen = () => {
@@ -53,9 +66,10 @@ export const AttendanceScreen = () => {
     },
   ];
 
-  const filteredData = activeFilter === 'all' 
-    ? attendanceData 
-    : attendanceData.filter(item => item.status === activeFilter);
+  const filteredData =
+    activeFilter === 'all'
+      ? attendanceData
+      : attendanceData.filter((item) => item.status === activeFilter);
 
   // Group by date
   const groupedData = filteredData.reduce((groups, item) => {
@@ -68,9 +82,9 @@ export const AttendanceScreen = () => {
   }, {});
 
   // Convert grouped data to array for FlatList
-  const sections = Object.keys(groupedData).map(date => ({
+  const sections = Object.keys(groupedData).map((date) => ({
     date,
-    data: groupedData[date]
+    data: groupedData[date],
   }));
 
   const renderAttendanceCard = ({ item }) => (
@@ -85,12 +99,14 @@ export const AttendanceScreen = () => {
           <Text style={styles.timeText}>{item.time}</Text>
         </View>
       </View>
-      
+
       <View style={styles.statusContainer}>
         {item.status === 'present' ? (
           <View style={[styles.statusBadge, styles.presentBadge]}>
             <CheckCircle2 size={16} color={colors.green[600]} />
-            <Text style={[styles.statusText, styles.presentText]}>Presente</Text>
+            <Text style={[styles.statusText, styles.presentText]}>
+              Presente
+            </Text>
           </View>
         ) : (
           <View style={[styles.statusBadge, styles.absentBadge]}>
@@ -112,55 +128,64 @@ export const AttendanceScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      
+
       <View style={styles.header}>
         <Text style={styles.title}>Registro de Presenças</Text>
         <Text style={styles.subtitle}>Acompanhe sua frequência nas aulas</Text>
       </View>
-      
+
       <View style={styles.filterContainer}>
         <View style={styles.filterHeader}>
           <Filter size={16} color={colors.gray[700]} />
           <Text style={styles.filterTitle}>Filtrar por</Text>
         </View>
-        
+
         <View style={styles.filterOptions}>
-          <TouchableOpacity 
-            style={[styles.filterOption, activeFilter === 'all' && styles.activeFilterOption]}
+          <TouchableOpacity
+            style={[
+              styles.filterOption,
+              activeFilter === 'all' && styles.activeFilterOption,
+            ]}
             onPress={() => setActiveFilter('all')}
           >
-            <Text 
+            <Text
               style={[
-                styles.filterOptionText, 
-                activeFilter === 'all' && styles.activeFilterOptionText
+                styles.filterOptionText,
+                activeFilter === 'all' && styles.activeFilterOptionText,
               ]}
             >
               Todos
             </Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[styles.filterOption, activeFilter === 'present' && styles.activeFilterOption]}
+
+          <TouchableOpacity
+            style={[
+              styles.filterOption,
+              activeFilter === 'present' && styles.activeFilterOption,
+            ]}
             onPress={() => setActiveFilter('present')}
           >
-            <Text 
+            <Text
               style={[
-                styles.filterOptionText, 
-                activeFilter === 'present' && styles.activeFilterOptionText
+                styles.filterOptionText,
+                activeFilter === 'present' && styles.activeFilterOptionText,
               ]}
             >
               Presenças
             </Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[styles.filterOption, activeFilter === 'absent' && styles.activeFilterOption]}
+
+          <TouchableOpacity
+            style={[
+              styles.filterOption,
+              activeFilter === 'absent' && styles.activeFilterOption,
+            ]}
             onPress={() => setActiveFilter('absent')}
           >
-            <Text 
+            <Text
               style={[
-                styles.filterOptionText, 
-                activeFilter === 'absent' && styles.activeFilterOptionText
+                styles.filterOptionText,
+                activeFilter === 'absent' && styles.activeFilterOptionText,
               ]}
             >
               Faltas
@@ -168,17 +193,15 @@ export const AttendanceScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-      
+
       <FlatList
         data={sections}
         keyExtractor={(item) => item.date}
         renderItem={({ item: section }) => (
           <View>
             {renderSectionHeader({ section })}
-            {section.data.map(item => (
-              <View key={item.id}>
-                {renderAttendanceCard({ item })}
-              </View>
+            {section.data.map((item) => (
+              <View key={item.id}>{renderAttendanceCard({ item })}</View>
             ))}
           </View>
         )}
@@ -187,7 +210,7 @@ export const AttendanceScreen = () => {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { CalendarClock, Clock, Fingerprint, School } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
@@ -12,10 +19,11 @@ export const TelaApresentacao = () => {
     month: 'long',
     day: 'numeric',
   });
-  
+
   // Capitalize first letter
-  const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-  
+  const capitalizedDate =
+    formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+
   const nextClasses = [
     {
       id: '1',
@@ -43,7 +51,7 @@ export const TelaApresentacao = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      
+
       <View style={styles.header}>
         <View>
           <Text style={styles.date}>{capitalizedDate}</Text>
@@ -51,71 +59,92 @@ export const TelaApresentacao = () => {
         </View>
         <TouchableOpacity style={styles.profileButton}>
           <Image
-            source={{ uri: 'https://cdn-icons-png.flaticon.com/512/3106/3106807.png' }}
+            source={{
+              uri: 'https://cdn-icons-png.flaticon.com/512/3106/3106807.png',
+            }}
             style={styles.profileImage}
           />
         </TouchableOpacity>
       </View>
-      
+
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.stats}>
           <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: colors.teal[100] }]}>
+            <View
+              style={[styles.statIcon, { backgroundColor: colors.teal[100] }]}
+            >
               <Fingerprint size={22} color={colors.teal[600]} />
             </View>
             <Text style={styles.statValue}>92%</Text>
             <Text style={styles.statLabel}>Presenças</Text>
           </View>
-          
+
           <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: colors.amber[100] }]}>
+            <View
+              style={[styles.statIcon, { backgroundColor: colors.amber[100] }]}
+            >
               <CalendarClock size={22} color={colors.amber[600]} />
             </View>
             <Text style={styles.statValue}>3</Text>
             <Text style={styles.statLabel}>Faltas</Text>
           </View>
-          
+
           <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: colors.purple[100] }]}>
+            <View
+              style={[styles.statIcon, { backgroundColor: colors.purple[100] }]}
+            >
               <School size={22} color={colors.purple[600]} />
             </View>
             <Text style={styles.statValue}>8</Text>
             <Text style={styles.statLabel}>Disciplinas</Text>
           </View>
         </View>
-        
+
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Aulas 5º Semestre</Text>
-          
-          {nextClasses.map((classItem) => (
-            <TouchableOpacity key={classItem.id} style={styles.classCard}>
-              <View style={styles.classTime}>
-                <Clock size={18} color={colors.primary[600]} />
-                <Text style={styles.classTimeText}>{classItem.time}</Text>
-              </View>
-              
-              <Text style={styles.classSubject}>{classItem.subject}</Text>
-              <Text style={styles.classProfessor}>{classItem.professor}</Text>
-              <View style={styles.classDetails}>
-                <Text style={styles.classRoom}>{classItem.room}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+
+          {nextClasses &&
+            nextClasses.map((classItem) => (
+              <TouchableOpacity key={classItem?.id} style={styles.classCard}>
+                <View style={styles.classTime}>
+                  <Clock size={18} color={colors.primary[600]} />
+                  <Text style={styles.classTimeText}>{classItem?.time}</Text>
+                </View>
+
+                <Text style={styles.classSubject}>{classItem?.subject}</Text>
+                <Text style={styles.classProfessor}>
+                  {classItem?.professor}
+                </Text>
+                <View style={styles.classDetails}>
+                  <Text style={styles.classRoom}>{classItem?.room}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
         </View>
-        
+
         <View style={styles.quickActions}>
           <Text style={styles.sectionTitle}>Ações Rápidas</Text>
-          
+
           <View style={styles.actionButtons}>
             <TouchableOpacity style={styles.actionButton}>
-              <View style={[styles.actionIcon, { backgroundColor: colors.primary[100] }]}>
+              <View
+                style={[
+                  styles.actionIcon,
+                  { backgroundColor: colors.primary[100] },
+                ]}
+              >
                 <Fingerprint size={24} color={colors.primary[600]} />
               </View>
               <Text style={styles.actionText}>Registrar Presença</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity style={styles.actionButton}>
-              <View style={[styles.actionIcon, { backgroundColor: colors.amber[100] }]}>
+              <View
+                style={[
+                  styles.actionIcon,
+                  { backgroundColor: colors.amber[100] },
+                ]}
+              >
                 <CalendarClock size={24} color={colors.amber[600]} />
               </View>
               <Text style={styles.actionText}>Ver Horários</Text>
@@ -125,7 +154,7 @@ export const TelaApresentacao = () => {
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

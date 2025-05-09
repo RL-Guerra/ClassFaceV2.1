@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/userModel');
+const bcrypt = require('bcrypt');
+
 
 router.get('/', (req, res) => {
   User.getAll((err, users) => {
@@ -25,31 +27,18 @@ router.post('/login', (req, res) => {
     return res.status(400).json({ error: "Email e senha são obrigatórios" });
   }
 
-  User.getAll(email, async (err, user) => {
+  User.findOne({ email }, async (err, user) => {
     if (err) return res.status(500).json({ error: err.message });
     if (!user) return res.status(401).json({ error: "Email ou senha inválidos" });
 
-    try {
-    // Busca o usuário pelo email
-    const user = await User.findOne({ where: { email } });
-    if (!user || !await bcrypt.compare(password, user.password)) {
-      return res.status(401).json({ message: 'Credenciais inválidas' });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Email ou senha inválidos" });
     }
 
-    // Gera um token JWT
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.JWT_SECRET || 'default_jwt_secret',
-      { expiresIn: '5h' }
-    );
-    console.log('######################', token)
-    // Retorna a resposta com o token JWT
-    res.json({ message: 'Login bem-sucedido', token });
-  } catch (error) {
-    console.error('Erro ao fazer login:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
-  }
     
+
+    res.json({ message: 'Login bem-sucedido', id: user.id, name: user.name, email: user.email, photo: user.photo  });
   });
 });
 

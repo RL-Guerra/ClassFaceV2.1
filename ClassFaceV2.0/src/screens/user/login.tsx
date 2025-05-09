@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Eye, EyeOff, LogIn } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
@@ -13,28 +23,25 @@ export const Login = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async() => {
-    // setLoading(true);
-    // Simulate API call
-    console.log('CAIU AQ')
-
-    await api.post('/users/login', {
-      email, 
-      password
-    }).then((response) => {
-      console.log("@@@@@@@@",response);
-      router.replace('/(tabs)');
-    }).catch((error) => {
-      console.error(error);
-    })
-    .finally(() => {
-      console.log("Loading finished");
-      // setLoading(false);
-    })
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   router.replace('/(tabs)');
-    // }, 1000);
+  const handleLogin = async () => {
+    setLoading(true);
+    await api
+      .post('/users/login', {
+        email,
+        password,
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          return router.replace('/(tabs)');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert('Erro no login');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -47,11 +54,15 @@ export const Login = () => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <Image
-            source={{ uri: 'https://images.pexels.com/photos/8363771/pexels-photo-8363771.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' }}
+            source={{
+              uri: 'https://images.pexels.com/photos/8363771/pexels-photo-8363771.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+            }}
             style={styles.logoImage}
           />
           <Text style={styles.title}>ClassFace</Text>
-          <Text style={styles.subtitle}>Chamada Automática para Salas de Aula</Text>
+          <Text style={styles.subtitle}>
+            Chamada Automática para Salas de Aula
+          </Text>
         </View>
 
         <View style={styles.form}>
@@ -121,7 +132,7 @@ export const Login = () => {
       </ScrollView>
     </KeyboardAvoidingView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
