@@ -10,18 +10,17 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { Link, useRouter } from 'expo-router';
 import { Eye, EyeOff, LogIn } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
-import api from '@/src/services/api';
+import { api } from '@/src/services/api';
+import { router } from 'expo-router';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleLogin = async () => {
     setLoading(true);
@@ -122,11 +121,11 @@ export const Login = () => {
 
           <View style={styles.registerContainer}>
             <Text style={styles.registerText}>Não tem uma conta? </Text>
-            <Link href="/(auth)/register" asChild>
-              <TouchableOpacity>
-                <Text style={styles.registerLink}>Cadastre-se</Text>
-              </TouchableOpacity>
-            </Link>
+            <TouchableOpacity
+              onPress={() => router.navigate('/(auth)/register')}
+            >
+              <Text style={styles.registerLink}>Cadastre-se</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
