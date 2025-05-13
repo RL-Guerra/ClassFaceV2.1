@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { ChevronRight, LogOut, Settings, User, Bell, Shield, CircleHelp as HelpCircle } from 'lucide-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from '@/constants/colors';
 import { useRouter } from 'expo-router';
 
 export const ProfileScreen = () => {
   const router = useRouter();
-  
+  const [user, setUser] = useState({name:'', email:''});
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const storedUser = await AsyncStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    };
+    loadUser();
+  }, []);
+
   const handleLogout = () => {
     // In a real app, this would clear auth state
     router.replace('/(auth)/login');
@@ -29,9 +41,8 @@ export const ProfileScreen = () => {
           />
           
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>Raphael Guerra de Lima</Text>
-            <Text style={styles.profileEmail}>guerraraphael88@gmail.com</Text>
-            <Text style={styles.profileMeta}>RA: 55763</Text>
+            <Text style={styles.profileName}>{user.name}</Text>
+            <Text style={styles.profileEmail}>{user.email}</Text>
           </View>
           
           <TouchableOpacity style={styles.editButton}>

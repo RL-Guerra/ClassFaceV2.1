@@ -15,6 +15,7 @@ import { colors } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 import { api } from '@/src/services/api';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -29,8 +30,11 @@ export const Login = () => {
         email,
         password,
       })
-      .then((response) => {
+      .then(async (response) => {
         if (response.status == 200) {
+          const { name, email} = response.data;
+          await AsyncStorage.setItem('user', JSON.stringify({ name, email }));
+
           return router.replace('/(tabs)');
         }
       })

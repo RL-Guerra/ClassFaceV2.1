@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { CalendarClock, Clock, Fingerprint, School } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const TelaApresentacao = () => {
   const currentDate = new Date();
@@ -48,6 +49,18 @@ export const TelaApresentacao = () => {
     },
   ];
 
+  const [user, setUser] = React.useState({ name: ''});
+  useEffect(() => {
+    const loadUser = async () => {
+      const storedUser = await AsyncStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    };
+
+    loadUser();
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
@@ -55,7 +68,7 @@ export const TelaApresentacao = () => {
       <View style={styles.header}>
         <View>
           <Text style={styles.date}>{capitalizedDate}</Text>
-          <Text style={styles.greeting}>Olá, Estudante</Text>
+          <Text style={styles.greeting}>Olá, {user.name}</Text>
         </View>
         <TouchableOpacity style={styles.profileButton}>
           <Image
