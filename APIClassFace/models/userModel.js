@@ -6,11 +6,12 @@ const User = {
   getAll: (callback) => {
     db.all("SELECT * FROM users", [], callback);
   },
-
   getById: (id, callback) => {
     db.get("SELECT * FROM users WHERE id = ?", [id], callback);
   },
-
+  findOne: ({ email }, callback) => {
+    db.get("SELECT * FROM users WHERE email = ?", [email], callback);
+  },
   create: (user, callback) => {
     const { name, email, photo, password } = user;
 

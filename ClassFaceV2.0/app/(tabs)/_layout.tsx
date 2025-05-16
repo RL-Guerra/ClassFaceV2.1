@@ -1,6 +1,12 @@
 import { Tabs } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
-import { ChartBar as BarChart2, Camera, Chrome as Home, User, CircleHelp as HelpCircle } from 'lucide-react-native';
+import {
+  ChartBar as BarChart2,
+  Camera,
+  Chrome as Home,
+  User,
+  CircleHelp as HelpCircle,
+} from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 
 export default function TabLayout() {
@@ -19,9 +25,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Início',
-          tabBarIcon: ({ color, size }) => (
-            <Home size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -49,9 +53,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Perfil',
-          tabBarIcon: ({ color, size }) => (
-            <User size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
         }}
       />
       <Tabs.Screen

@@ -1,40 +1,50 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { Eye, EyeOff, LogIn } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
-import api from '@/src/services/api';
+import { api } from '@/src/services/api';
+import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
-  const handleLogin = async() => {
-    // setLoading(true);
-    // Simulate API call
-    console.log('CAIU AQ')
+  const handleLogin = async () => {
+    setLoading(true);
+    await api
+      .post('/users/login', {
+        email,
+        password,
+      })
+      .then(async (response) => {
+        if (response.status == 200) {
+          const { name, email} = response.data;
+          await AsyncStorage.setItem('user', JSON.stringify({ name, email }));
 
-    await api.post('/users/login', {
-      email, 
-      password
-    }).then((response) => {
-      console.log("@@@@@@@@",response);
-      router.replace('/(tabs)');
-    }).catch((error) => {
-      console.error(error);
-    })
-    .finally(() => {
-      console.log("Loading finished");
-      // setLoading(false);
-    })
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   router.replace('/(tabs)');
-    // }, 1000);
+          return router.replace('/(tabs)');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert('Erro no login');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -47,11 +57,15 @@ export const Login = () => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <Image
-            source={{ uri: 'https://images.pexels.com/photos/8363771/pexels-photo-8363771.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' }}
+            source={{
+              uri: 'https://images.pexels.com/photos/8363771/pexels-photo-8363771.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+            }}
             style={styles.logoImage}
           />
           <Text style={styles.title}>ClassFace</Text>
-          <Text style={styles.subtitle}>Chamada Automática para Salas de Aula</Text>
+          <Text style={styles.subtitle}>
+            Chamada Automática para Salas de Aula
+          </Text>
         </View>
 
         <View style={styles.form}>
@@ -111,17 +125,17 @@ export const Login = () => {
 
           <View style={styles.registerContainer}>
             <Text style={styles.registerText}>Não tem uma conta? </Text>
-            <Link href="/(auth)/register" asChild>
-              <TouchableOpacity>
-                <Text style={styles.registerLink}>Cadastre-se</Text>
-              </TouchableOpacity>
-            </Link>
+            <TouchableOpacity
+              onPress={() => router.navigate('/(auth)/register')}
+            >
+              <Text style={styles.registerLink}>Cadastre-se</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Alert,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Camera, UserPlus } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
-
-import api from '../../services/api';
+import { api } from '@/src/services/api';
 
 export const Register = () => {
   const [name, setName] = useState('');
@@ -14,9 +23,8 @@ export const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [photoTaken, setPhotoTaken] = useState(false);
-  
-  const router = useRouter();
 
+  const router = useRouter();
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
@@ -25,31 +33,41 @@ export const Register = () => {
     }
 
     if (!photoTaken) {
-      Alert.alert('Foto necessária', 'Por favor, capture sua foto para o reconhecimento facial.');
-     return;
+      Alert.alert(
+        'Foto necessária',
+        'Por favor, capture sua foto para o reconhecimento facial.'
+      );
+      return;
     }
 
     if (!name || !email || !password) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
-   }
+    }
 
-      setLoading(true);
-      await api.post('/users/register', {
+    setLoading(true);
+    await api
+      .post('/users/register', {
         name,
         email,
         password: password,
-        photo: "PHOTO"
-      }).then((response) => {
+        photo: 'PHOTO',
+      })
+      .then((response) => {
         console.log(response.data);
         Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!');
         router.replace('/(auth)/login');
-      }).catch((error) => {
-        console.error(error);
-        Alert.alert('Erro', error.response?.data?.message || 'Erro ao cadastrar usuário.');
-      }).finally(() => {
-        setLoading(false);
       })
+      .catch((error) => {
+        console.error(error);
+        Alert.alert(
+          'Erro',
+          error.response?.data?.message || 'Erro ao cadastrar usuário.'
+        );
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   // const handleRegister = () => {
@@ -57,12 +75,12 @@ export const Register = () => {
   //     Alert.alert('Erro', 'As senhas não coincidem. Por favor, verifique.');
   //     return;
   //   }
-    
+
   //   if (!photoTaken) {
   //     Alert.alert('Foto necessária', 'Por favor, capture sua foto para o reconhecimento facial.');
   //     return;
   //   }
-    
+
   //   setLoading(true);
   //   // Simulate API call
   //   setTimeout(() => {
@@ -72,13 +90,11 @@ export const Register = () => {
   //   }, 1500);
   // };
 
-  
-
   const takeFacialPhoto = () => {
     // In a real app, this would navigate to camera screen or use camera API
     // Here we'll just simulate taking a photo
     setTimeout(() => {
-       setPhotoTaken(true);
+      setPhotoTaken(true);
       Alert.alert('Sucesso', 'Foto capturada com sucesso!');
     }, 500);
   };
@@ -92,14 +108,16 @@ export const Register = () => {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton} 
+          <TouchableOpacity
+            style={styles.backButton}
             onPress={() => router.back()}
           >
             <ArrowLeft size={24} color={colors.gray[700]} />
           </TouchableOpacity>
           <Text style={styles.title}>Criar Conta</Text>
-          <Text style={styles.subtitle}>Preencha os dados abaixo para se cadastrar</Text>
+          <Text style={styles.subtitle}>
+            Preencha os dados abaixo para se cadastrar
+          </Text>
         </View>
 
         <View style={styles.form}>
@@ -149,12 +167,20 @@ export const Register = () => {
 
           <View style={styles.photoSection}>
             <Text style={styles.label}>Foto para Reconhecimento Facial</Text>
-            <TouchableOpacity 
-              style={[styles.photoButton, photoTaken && styles.photoTaken]} 
+            <TouchableOpacity
+              style={[styles.photoButton, photoTaken && styles.photoTaken]}
               onPress={takeFacialPhoto}
             >
-              <Camera size={24} color={photoTaken ? colors.white : colors.primary[600]} />
-              <Text style={[styles.photoButtonText, photoTaken && styles.photoButtonTextTaken]}>
+              <Camera
+                size={24}
+                color={photoTaken ? colors.white : colors.primary[600]}
+              />
+              <Text
+                style={[
+                  styles.photoButtonText,
+                  photoTaken && styles.photoButtonTextTaken,
+                ]}
+              >
                 {photoTaken ? 'Foto Capturada' : 'Capturar Foto'}
               </Text>
             </TouchableOpacity>
@@ -181,7 +207,7 @@ export const Register = () => {
       </ScrollView>
     </KeyboardAvoidingView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
