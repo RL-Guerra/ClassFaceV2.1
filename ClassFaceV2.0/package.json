@@ -8,7 +8,9 @@
     "build:web": "expo export --platform web",
     "lint": "expo lint",
     "start": "expo start",
-    "force-install": "npm install --legacy-peer-deps"
+    "force-install": "npm install --legacy-peer-deps",
+    "build-dev-android": "eas build --platform android --profile development",
+    "build-preview-android": "eas build --platform android --profile preview"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.2.3",
@@ -44,7 +46,8 @@
     "react-native-svg": "^15.11.1",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "^0.19.13",
-    "react-native-webview": "13.12.5"
+    "react-native-webview": "13.12.5",
+    "expo-dev-client": "~5.1.8"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
