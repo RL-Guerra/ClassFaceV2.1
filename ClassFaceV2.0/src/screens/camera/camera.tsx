@@ -6,6 +6,14 @@ import { Camera, CircleCheck as CheckCircle, RefreshCcw, X } from 'lucide-react-
 import { colors } from '@/constants/colors';
 import { Platform } from 'react-native';
 
+import { 
+  useSharedValue, 
+  useAnimatedStyle, 
+  withTiming, 
+  Easing 
+} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+
 export const CameraScreen = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<CameraType>('front');
@@ -16,10 +24,9 @@ export const CameraScreen = () => {
   
   const cameraRef = useRef(null);
   
-  // Animation values
-  // const scanLinePosition = useSharedValue(0);
-  // const overlayOpacity = useSharedValue(0);
-  // const successMessageScale = useSharedValue(0);
+  const scanLinePosition = useSharedValue(0);
+  const overlayOpacity = useSharedValue(0);
+  const successMessageScale = useSharedValue(0);
   
   // Request camera permissions if not already granted
   useEffect(() => {
@@ -32,49 +39,43 @@ export const CameraScreen = () => {
       // scanLinePosition.value = 0;
       const duration = 2000;
       
-      // Animation loop function
-      // const animateScanLine = () => {
-      //   scanLinePosition.value = 0;
-      //   scanLinePosition.value = withTiming(1, { 
-      //     duration,
-      //     easing: Easing.linear
-      //   }, () => {
-      //     if (!photoTaken && !isVerifying && !isVerified) {
-      //       setTimeout(animateScanLine, 500);
-      //     }
-      //   });
-      // };
+      const animateScanLine = () => {
+        scanLinePosition.value = 0;
+        scanLinePosition.value = withTiming(1, { 
+          duration,
+          easing: Easing.linear
+        }, () => {
+          if (!photoTaken && !isVerifying && !isVerified) {
+            setTimeout(animateScanLine, 500);
+          }
+        });
+      };
       
-      // Start the animation
-      // animateScanLine();
+      animateScanLine();
     }
   }, [photoTaken, isVerifying, isVerified]);
   
-  // Scan line animation style
-  // const scanLineStyle = useAnimatedStyle(() => {
-  //   return {
-  //     transform: [{ translateY: scanLinePosition.value * 280 }],
-  //     opacity: withTiming(photoTaken ? 0 : 0.7, { duration: 300 }),
-  //   };
-  // });
+  const scanLineStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: scanLinePosition.value * 280 }],
+      opacity: withTiming(photoTaken ? 0 : 0.7, { duration: 300 }),
+    };
+  });
   
-  // Overlay animation style
-  // const overlayStyle = useAnimatedStyle(() => {
-  //   return {
-  //     opacity: overlayOpacity.value,
-  //   };
-  // });
+  const overlayStyle = useAnimatedStyle(() => {
+    return {
+      opacity: overlayOpacity.value,
+    };
+  });
   
-  // Success message animation style
-  // const successMessageStyle = useAnimatedStyle(() => {
-  //   return {
-  //     transform: [{ scale: successMessageScale.value }],
-  //   };
-  // });
+  const successMessageStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: successMessageScale.value }],
+    };
+  });
   
   const handleTakePicture = async () => {
     if (Platform.OS === 'web') {
-      // On web, we'll just simulate taking a picture
       simulatePhotoCapture();
       return;
     }
@@ -93,7 +94,6 @@ export const CameraScreen = () => {
     }
   };
   
-  // Simulate taking a photo for web or when camera isn't available
   const simulatePhotoCapture = () => {
     setIsTakingPicture(true);
     setTimeout(() => {
@@ -106,21 +106,17 @@ export const CameraScreen = () => {
   const handleVerification = () => {
     setIsVerifying(true);
     
-    // Animate overlay
-    // overlayOpacity.value = withTiming(0.5, { duration: 300 });
+    overlayOpacity.value = withTiming(0.5, { duration: 300 });
     
-    // Simulate verification process
     setTimeout(() => {
       setIsVerifying(false);
       setIsVerified(true);
       
-      // Animate success message
-      // successMessageScale.value = withTiming(1, { 
-      //   duration: 400,
-      //   easing: Easing.elastic(1.2)
-      // });
+      successMessageScale.value = withTiming(1, { 
+        duration: 400,
+        easing: Easing.elastic(1.2)
+      });
       
-      // Reset after 3 seconds
       setTimeout(resetCamera, 3000);
     }, 2000);
   };
@@ -129,9 +125,8 @@ export const CameraScreen = () => {
     setPhotoTaken(false);
     setIsVerified(false);
     
-    // Reset animations
-    // successMessageScale.value = withTiming(0, { duration: 300 });
-    // overlayOpacity.value = withTiming(0, { duration: 300 });
+    successMessageScale.value = withTiming(0, { duration: 300 });
+    overlayOpacity.value = withTiming(0, { duration: 300 });
   };
   
   if (!permission) {
@@ -183,13 +178,12 @@ export const CameraScreen = () => {
             facing={facing}
           />
         
-        {/* <View style={styles.faceOverlay}>
+        <View style={styles.faceOverlay}>
           <View style={styles.faceOutline} />
           <Animated.View style={[styles.scanLine, scanLineStyle]} />
         </View>
-         */}
-        {/* Verification overlay */}
-        {/* <Animated.View style={[styles.verificationOverlay, overlayStyle]}>
+        
+        <Animated.View style={[styles.verificationOverlay, overlayStyle]}>
           {isVerifying && (
             <View style={styles.loadingIndicator}>
               <Text style={styles.verifyingText}>Verificando...</Text>
@@ -204,7 +198,7 @@ export const CameraScreen = () => {
               <Text style={styles.successText}>Presença Registrada!</Text>
             </Animated.View>
           )}
-        </Animated.View> */}
+        </Animated.View>
       </View>
       
       <View style={styles.controls}>
