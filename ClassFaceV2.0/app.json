@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "bolt-expo-nativewind",
-    "slug": "bolt-expo-nativewind",
+    "slug": "classface-ue-ql9ubv6dcq6awh4fnx",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -27,11 +27,12 @@
         "origin": false
       },
       "eas": {
-        "projectId": "2a5c33ee-f3d4-4e54-b55b-d495df8ad304"
+        "projectId": "c2d637a0-a1cc-4b88-b1d9-73952a65dad2"
       }
     },
     "android": {
       "package": "com.babinayumi.boltexponativewind"
-    }
+    },
+    "owner": "classface"
   }
 }
